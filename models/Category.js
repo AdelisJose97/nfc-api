@@ -6,6 +6,10 @@ const CategorytSchema = new Schema({
     type: String
   },
   icon: String,
+  serviceId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Service'
+  },
   dishes: [{
     type: Schema.Types.ObjectId,
     ref: 'Dish'

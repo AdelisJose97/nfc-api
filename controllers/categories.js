@@ -4,13 +4,18 @@ const path = require('path')
 
 // Models
 const Category = require('../models/Category')
-const Restaurant = require('../models/Restaurant')
+const Service = require('../models/Service')
 
+// Obtener todas las categorias
+categoriesRouter.get('/', credentialsExtractor, async (request, response, next) => {
+  const categories = await Category.find({}).populate({ path: 'serviceId', select: 'name' })
+  response.json(categories)
+})
+
+// Crear una categoria
 categoriesRouter.post('/', credentialsExtractor, async (request, response, next) => {
-  const { name } = request.body
-
+  const { name, serviceId } = request.body
   const { userId } = request
-  const restaurant = await Restaurant.findById(userId)
 
   let sampleFile
   let uploadPath
@@ -26,12 +31,16 @@ categoriesRouter.post('/', credentialsExtractor, async (request, response, next)
   }
   const newCategory = new Category({
     name,
+    serviceId,
     icon: uploadPath
   })
   try {
     const categorySaved = await newCategory.save()
-    restaurant.categories = restaurant.categories.concat(categorySaved._id)
-    await restaurant.save()
+    await Service.findByIdAndUpdate(serviceId, {
+      $addToSet: {
+        categories: categorySaved._id
+      }
+    }, { new: true })
     response.json(categorySaved)
   } catch (error) {
     next(error)

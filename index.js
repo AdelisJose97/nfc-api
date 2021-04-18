@@ -27,8 +27,9 @@ const handleError = require('./midelwares/handleError')
 /* const usersRouter = require('./controllers/users') */
 const loginRouter = require('./controllers/login')
 const restaurantsRouter = require('./controllers/restaurants')
-const dishsRouter = require('./controllers/dishs')
+const servicesRouter = require('./controllers/services')
 const categoriesRouter = require('./controllers/categories')
+const dishsRouter = require('./controllers/dishs')
 
 app.get('/', (request, response) => {
   response.send('<h1>Hello Word</h1>')
@@ -37,8 +38,9 @@ app.get('/', (request, response) => {
 /* app.use('/api/users', usersRouter) */
 app.use('/api/login', loginRouter)
 app.use('/api/restaurants', restaurantsRouter)
-app.use('/api/dishs', dishsRouter)
+app.use('/api/services', servicesRouter)
 app.use('/api/categories', categoriesRouter)
+app.use('/api/dishs', dishsRouter)
 
 app.use(notFound)
 app.use(handleError)

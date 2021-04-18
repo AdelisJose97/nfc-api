@@ -13,9 +13,9 @@ const restaurantSchema = new Schema({
   phoneNumber: Number,
   avatar: String,
   cover: String,
-  categories: [{
+  services: [{
     type: Schema.Types.ObjectId,
-    ref: 'Categories'
+    ref: 'Service'
   }]
 })
 
