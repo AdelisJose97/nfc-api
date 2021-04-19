@@ -4,11 +4,17 @@ const path = require('path')
 // Midelwares
 const credentialsExtractor = require('../midelwares/credentialsExtractor')
 
-// Models
-/* const Restaurnt = require('../models/Restaurant') */
+// Modelos
 const Dish = require('../models/Dish')
 const Category = require('../models/Category')
 
+// Obtener los platos
+dishsRouter.get('/', async (request, response, next) => {
+  const dishes = await Dish.find({}).populate({ path: 'categoryId', select: 'name' })
+  response.json(dishes)
+})
+
+// Crear un plato
 dishsRouter.post('/', credentialsExtractor, async (request, response, next) => {
   const {
     name,
@@ -19,17 +25,17 @@ dishsRouter.post('/', credentialsExtractor, async (request, response, next) => {
 
   // Sacar UserId de request
   const { userId } = request
-
   let sampleFile
   let uploadPath
-  try {
-    if (Object.keys(request.files).length > 0) {
+
+  if (request.files && Object.keys(request.files).length > 0) {
+    try {
       sampleFile = request.files.image
       uploadPath = path.join('public', 'uploads', userId, 'products-images', sampleFile.name)
       await sampleFile.mv(uploadPath)
+    } catch (error) {
+      return response.status(500).send(error)
     }
-  } catch (error) {
-    return response.status(500).send(error)
   }
 
   if (!name || !price || !description || !categoryId) {
@@ -56,10 +62,6 @@ dishsRouter.post('/', credentialsExtractor, async (request, response, next) => {
   } catch (error) {
     next(error)
   }
-})
-dishsRouter.get('/', async (request, response, next) => {
-  const dishes = await Dish.find({}).populate({ path: 'categoryId', select: 'name' })
-  response.json(dishes)
 })
 
 module.exports = dishsRouter
