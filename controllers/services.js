@@ -6,7 +6,7 @@ const Service = require('../models/Service')
 const Restaurant = require('../models/Restaurant')
 
 // Obtener todos los servicios
-servicesRouter.get('/', credentialsExtractor, async (request, response, next) => {
+servicesRouter.get('/', async (request, response, next) => {
   const services = await Service.find({}).populate({ path: 'categories', select: 'name' })
   response.json(services)
 })
