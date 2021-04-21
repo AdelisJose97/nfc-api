@@ -7,7 +7,7 @@ const Category = require('../models/Category')
 const Service = require('../models/Service')
 
 // Obtener todas las categorias
-categoriesRouter.get('/', credentialsExtractor, async (request, response, next) => {
+categoriesRouter.get('/', async (request, response, next) => {
   const categories = await Category.find({}).populate({ path: 'serviceId', select: 'name' })
   response.json(categories)
 })
